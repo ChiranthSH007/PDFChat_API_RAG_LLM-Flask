@@ -107,7 +107,7 @@ Now,
 open up you local host and port
 ```
 
-### API Endpoints
+# API Endpoints
 
 ```bash
 http://127.0.0.1:8080/loadmodel
