@@ -12,8 +12,6 @@ CORS(app)
 
 class ClientApp():
 
-    # global previous_model, previous_threads, previous_max_tokens, previous_top_k, previous_file, previous_chunk_size, previous_overlap, previous_temp
-
     def __init__(self):
         self.RAGBot = RAGPDFBot()
         # Pre-set values
@@ -35,11 +33,10 @@ class ClientApp():
 # def home():
 #     return render_template('index.html')
 
-
+# Load the model path and file path, Check if the model or file has changed to reload
 @app.route("/loadmodel", methods=['POST'])
 @cross_origin()
 def model():
-    # Eg: C:/Users/win10/Desktop/Materials/Deep Learning/Deep Learning Notes.pdf
     result = ""
     model = request.args.get('model')
     file_path = request.args.get('filepath')
@@ -62,6 +59,8 @@ def model():
             chatApp.previous_file = file_path
             result = "File Loaded"
     return result, 200
+
+# Apply the Hyper-parameters to the model and initialize the model, If any  update in parameters reload
 
 
 @app.route("/params", methods=['POST'])
@@ -90,6 +89,8 @@ def params():
         # Pass a specific error and check for it in front end
         print("model not loaded... please load the model")
         return "Model not loaded ", 200
+
+# Chat with the model with given Query and get the response
 
 
 @app.route("/chat", methods=['POST'])

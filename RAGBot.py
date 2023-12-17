@@ -3,6 +3,7 @@ import pandas as pd
 import time
 import io
 
+# import libs
 from tqdm import tqdm
 from langchain.llms import GPT4All
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
@@ -23,6 +24,7 @@ class RAGPDFBot:
         self.model = ""
 
     def get_model(self, model, chunk_size: int = 10000):
+        # set the local paths of the models
         self.model = model
         if self.model == "Falcon":
             self.model_path = "E:/Programming/Machine Learning/LLM/GPT4All_llms/gpt4all-falcon-q4_0.gguf"
@@ -34,13 +36,17 @@ class RAGPDFBot:
             self.model_path = "E:/Programming/Machine Learning/LLM/GPT4All_llms/nous-hermes-llama2-13b.Q4_0.gguf"
 
     def build_vectordb(self, chunk_size, overlap, file_path):
+        # Loading the PDF
         loader = PyPDFLoader(file_path)
+        # Splitting the text in the PDF Recursively
         text_splitter = RecursiveCharacterTextSplitter(
             chunk_size=chunk_size, chunk_overlap=overlap)
+        # Create the vectordb with required embedding
         self.index = VectorstoreIndexCreator(embedding=HuggingFaceEmbeddings(
         ), text_splitter=text_splitter).from_loaders([loader])
 
     def load_model(self, n_threads, max_tokens, repeat_penalty, n_batch, top_k, temp):
+        # load the model with the required hyper-parameters
         callbacks = [StreamingStdOutCallbackHandler()]
 
         self.llm = GPT4All(model=self.model_path, callbacks=callbacks, verbose=False,
@@ -57,7 +63,7 @@ class RAGPDFBot:
             print(f"Retrieving information related to your question...")
             print(
                 f"Found this content which is most similar to your question:{context}")
-
+        # Creating the Prompt Template for the model
         if rag_off:
             template = """Question: {question}
             Answer: This is the response:
@@ -74,7 +80,7 @@ class RAGPDFBot:
     def inference(self):
         if self.context_verbosity:
             print(f"Your Query: {self.prompt}")
-
+        # Using Langchian to prompt the model
         llm_chain = LLMChain(prompt=self.prompt, llm=self.llm)
         print(f"Processing the information...\n")
         response = llm_chain.run(self.user_input)
