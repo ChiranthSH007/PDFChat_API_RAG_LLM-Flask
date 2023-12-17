@@ -1,0 +1,9 @@
+langchain
+pygpt4all
+gpt4all
+transformers
+tiktoken
+chromadb
+sentence_transformers
+Flask
+Flask-Cors
