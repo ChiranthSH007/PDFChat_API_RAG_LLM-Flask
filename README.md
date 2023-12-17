@@ -1,4 +1,4 @@
-# PDFChat API using RAG_LLLM_Flask_Langchain
+# PDFChat API using RAG_LLM_Flask_Langchain
 
 ## Project Description
 
